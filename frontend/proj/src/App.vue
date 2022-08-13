@@ -1,6 +1,13 @@
 <template>
   <div class="app">
-    <JobList :jobs="jobs" />
+    <header>
+      <div class="order">
+        <button @click="handleClick('title')">order by title</button>
+        <button @click="handleClick('salary')">order by salary</button>
+        <button @click="handleClick('locations')">order by locations</button>
+      </div>
+    </header>
+    <JobList :jobs="jobs" :order="order"/>
   </div>
 </template>
 
@@ -8,22 +15,12 @@
 import { defineComponent, reactive, toRefs, ref } from 'vue'; // ts と連研するために必要
 import JobList from './components/JobList.vue'
 import Job  from './types/Job'
+import OrderTerm from './types/OrderTerm'
+
 export default defineComponent({
   name: 'App',
   components: {JobList},
   setup() {
-    // const state = reactive({
-    //   name: 'Link',
-    //   age: 25 as string|number,
-    // })
-    
-    // // toRefs: reactive オブジェクトを ref オブジェクトに変換して返す
-    // console.log('@@@@@', toRefs(state))
-    // return {...toRefs(state)} 
-
-    // const name = ref('Link')
-    // const age = ref<string | number>(25) // refの方を定義する場合：Genericを使う
-    // return {name, age}
     const jobs = ref<Job[]>([
       { title: 'farm worker', location: 'lon lon ranch', salary: 30000, id: '1' },
       { title: 'quarryman', location: 'death mountain', salary: 40000, id: '2' },
@@ -31,7 +28,13 @@ export default defineComponent({
       { title: 'fisherman', location: 'lake hylia', salary: 21000, id: '4' },
       { title: 'prison guard', location: 'gerudo valley', salary: 32000, id: '5' }
     ])
-    return { jobs }
+
+    const order = ref<OrderTerm>('title')
+
+    const handleClick = (term: OrderTerm) => {
+      order.value = term
+    }
+    return { jobs, handleClick, order }
   },
   // data() {
   //   return {
@@ -43,12 +46,20 @@ export default defineComponent({
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  header {
+    text-align: center;
+  }
+  header .order {
+    margin-top: 20px;
+  }
+  button {
+    margin: 0 10px;
+    color: #1195c9;
+    border: 3px solid #1195c9;
+    background: #d5f0ff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  </style>
